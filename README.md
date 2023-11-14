@@ -40,7 +40,7 @@ const tcpSocketServer = new TCPSocketServer(serverConfig);
 const jsonRpcApiProxy = new JsonRpcApiProxy(tcpSocketServer);
 
 // Add a method to the RPC interface
-jsonRpcApiProxy.rpc.addMethod('getGreeting', async (params) => {
+jsonRpcApiProxy.rpc.addMethod('getGreeting', async params => {
   return `Hello, ${params.name || 'World'}!`;
 });
 
@@ -49,7 +49,7 @@ jsonRpcApiProxy.start();
 
 // ...
 // Asynchronously send notifications
-jsonRpcApiProxy.rpc.client.notify("someEvent", { message: "Notification!" })
+jsonRpcApiProxy.rpc.client.notify('someEvent', { message: 'Notification!' });
 ```
 
 ## Documentation
