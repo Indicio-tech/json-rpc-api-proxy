@@ -2,10 +2,13 @@
   "name": "json-rpc-api-proxy",
   "version": "0.1.0",
   "description": "JSON-RPC API Proxy",
-  "main": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc --declaration",
-    "start": "node dist/app.js",
     "format": "prettier --write ."
   },
   "author": "Daniel Bluhm <dbluhm@pm.me>",
@@ -17,8 +20,5 @@
   },
   "dependencies": {
     "json-rpc-2.0": "^1.7.0"
-  },
-  "overrides": {
-    "ref-napi": "npm:@2060.io/ref-napi"
   }
 }
