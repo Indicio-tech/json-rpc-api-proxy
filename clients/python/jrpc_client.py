@@ -88,25 +88,37 @@ class JsonRpcClient:
         """Async context manager: close the client."""
         await self.stop()
 
-    async def request(self, method: str, **params: Any) -> Any:
+    async def _send(
+        self, method: str, id: Optional[int] = None, *positional: Any, **named: Any
+    ):
         """Send a request to the server."""
-        return await self.send_request(method, params)
+        if positional and named:
+            raise ValueError("Cannot mix positional and named arguments")
 
-    async def send_request(
-        self, method: str, params: Optional[Dict[str, Any]] = None
-    ) -> Any:
-        """Send a request to the server."""
-        self.id_counter += 1
-        message_id = self.id_counter
+        if positional:
+            params = positional
+        elif named:
+            params = named
+        else:
+            params = None
+
         request = {
             "jsonrpc": "2.0",
             "method": method,
-            "id": message_id,
+            "id": id,
         }
         if params is not None:
             request["params"] = params
         message = json.dumps(request)
         await self.transport.send(message)
+
+    async def request(
+        self, method: str, *positional: Any, **named: Any
+    ) -> Any:
+        """Send a request to the server."""
+        self.id_counter += 1
+        message_id = self.id_counter
+        await self._send(method, message_id, *positional, **named)
         future = asyncio.get_event_loop().create_future()
         self.pending_calls[message_id] = future
         return await future
@@ -129,16 +141,9 @@ class JsonRpcClient:
                 else:
                     future.set_exception(Exception("Invalid JSON-RPC response"))
 
-    async def notify(self, method: str, **params: Any) -> None:
+    async def notify(self, method: str, *positional: Any, **named: Any) -> None:
         """Send a notification to the server."""
-        message: Dict[str, Any] = {
-            "jsonrpc": "2.0",
-            "method": method,
-        }
-        if params is not None:
-            message["params"] = params
-        message_str = json.dumps(message)
-        await self.transport.send(message_str)
+        await self._send(method, id=None, *positional, **named)
 
     async def notification_received(
         self, method: Optional[str] = None, *, timeout: int = 5
