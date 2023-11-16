@@ -32,13 +32,13 @@ class MessageBuffer {
     processBuffer() {
         while (true) {
             if (this.headerSize === null) {
-                const headerEnd = this.buffer.indexOf('\n');
+                const headerEnd = this.buffer.indexOf('\n\n');
                 if (headerEnd !== -1) {
                     const header = this.buffer.subarray(0, headerEnd).toString();
-                    const match = header.match(/^length: (\d+)/);
+                    const match = header.match(/^Content-Length: (\d+)/);
                     if (match) {
                         this.headerSize = Number(match[1]);
-                        this.buffer = this.buffer.subarray(headerEnd + 1); // +1 for the new line
+                        this.buffer = this.buffer.subarray(headerEnd + 2); // +2 for the new lines
                     }
                     else {
                         throw new Error('Invalid message header');
@@ -138,7 +138,7 @@ class BaseSocketServer {
      */
     send(data) {
         const buffer = Buffer.from(data);
-        const header = `length: ${buffer.length}\n`;
+        const header = `Content-Length: ${buffer.length}\n\n`;
         const headerBuffer = Buffer.from(header);
         const message = Buffer.concat([headerBuffer, buffer]);
         for (const socket of this.sockets) {
