@@ -1,0 +1,23 @@
+version = 1
+revision = 2
+requires-python = ">=3.9"
+
+[[package]]
+name = "async-selective-queue"
+version = "0.1.1.post0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/df/de/953ff86bfc518b4d1049b422386be15c68cfc913b764170651d2b48890b7/async_selective_queue-0.1.1.post0.tar.gz", hash = "sha256:b3b0a564b07a0d0a32a097b392f520a4bd106f18bc3ee12e78daecc800613d23", size = 8747, upload-time = "2025-05-15T04:17:03.523Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4c/eb/d76ea412c219b71cf8609342fc9242f98820c487b35b8d0525dcbd89247d/async_selective_queue-0.1.1.post0-py3-none-any.whl", hash = "sha256:5478101066603d8e1959b08329e853b9b1cc0612debc101f0f87d1379154d7a9", size = 7790, upload-time = "2025-05-15T04:17:02.258Z" },
+]
+
+[[package]]
+name = "jsonrpc-api-proxy-client"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "async-selective-queue" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "async-selective-queue", specifier = ">=0.1.1.post0" }]
